@@ -133,6 +133,11 @@ Automated tests are not yet included. Recommended smoke checks:
 2. Upload a small video + thumbnail via the admin dashboard (requires valid S3 credentials).
 3. Confirm playback from the browse page and verify that chat messages broadcast between multiple browser tabs.
 
+## Deployment and CI/CD
+
+- CI/CD pipeline definition: [Jenkinsfile](Jenkinsfile)
+- Deployment notes and ECR/Jenkins/EKS guidance: [docs/deployment.md](docs/deployment.md)
+
 ## License
 
 MIT © StreamFlix Team
