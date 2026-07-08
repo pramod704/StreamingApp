@@ -30,12 +30,12 @@ pipeline {
 
     stage('Login to ECR') {
       steps {
+        // Use the official AWS CLI Docker image to generate ECR login password
         withCredentials([usernamePassword(credentialsId: 'aws-creds', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
           sh '''
-          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-          aws configure set region $AWS_REGION
-          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
+          docker run --rm -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+            amazon/aws-cli:2.11.4 ecr get-login-password --region $AWS_REGION | \
+            docker login --username AWS --password-stdin $ECR_REGISTRY
           '''
         }
       }
@@ -66,13 +66,6 @@ pipeline {
     }
   }
 }
-pipeline {
-  agent any
-
-  environment {
-    AWS_REGION = 'us-east-1'
-    ECR_REGISTRY = "${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com"
-  }
 
   stages {
     stage('Checkout') {
