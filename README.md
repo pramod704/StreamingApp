@@ -137,6 +137,7 @@ Automated tests are not yet included. Recommended smoke checks:
 
 - CI/CD pipeline definition: [Jenkinsfile](Jenkinsfile)
 - Deployment notes and ECR/Jenkins/EKS guidance: [docs/deployment.md](docs/deployment.md)
+- AWS ECR repository: `506189153515.dkr.ecr.us-east-1.amazonaws.com/ecrpramod`
 
 ## License
 
