@@ -1,0 +1,49 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+mongodb:
+  image: mongo:6
+  port: 27017
+
+frontend:
+  image:
+    repository: streaming-frontend
+    tag: latest
+  service:
+    port: 80
+
+auth:
+  image:
+    repository: streaming-auth
+    tag: latest
+  service:
+    port: 3001
+
+streaming:
+  image:
+    repository: streaming-streaming
+    tag: latest
+  service:
+    port: 3002
+
+admin:
+  image:
+    repository: streaming-admin
+    tag: latest
+  service:
+    port: 3003
+
+chat:
+  image:
+    repository: streaming-chat
+    tag: latest
+  service:
+    port: 3004

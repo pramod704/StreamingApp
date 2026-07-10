@@ -1,0 +1,144 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-mongodb
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: {{ .Values.mongodb.image }}
+          ports:
+            - containerPort: {{ .Values.mongodb.port }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-frontend
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 80
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-auth
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-auth
+    spec:
+      containers:
+        - name: auth
+          image: "{{ .Values.auth.image.repository }}:{{ .Values.auth.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PORT
+              value: "3001"
+            - name: MONGO_URI
+              value: mongodb://{{ .Release.Name }}-mongodb:27017/streamingapp
+          ports:
+            - containerPort: 3001
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-streaming
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-streaming
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-streaming
+    spec:
+      containers:
+        - name: streaming
+          image: "{{ .Values.streaming.image.repository }}:{{ .Values.streaming.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PORT
+              value: "3002"
+            - name: MONGO_URI
+              value: mongodb://{{ .Release.Name }}-mongodb:27017/streamingapp
+          ports:
+            - containerPort: 3002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-admin
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-admin
+    spec:
+      containers:
+        - name: admin
+          image: "{{ .Values.admin.image.repository }}:{{ .Values.admin.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PORT
+              value: "3003"
+            - name: MONGO_URI
+              value: mongodb://{{ .Release.Name }}-mongodb:27017/streamingapp
+          ports:
+            - containerPort: 3003
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-chat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-chat
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-chat
+    spec:
+      containers:
+        - name: chat
+          image: "{{ .Values.chat.image.repository }}:{{ .Values.chat.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PORT
+              value: "3004"
+            - name: MONGO_URI
+              value: mongodb://{{ .Release.Name }}-mongodb:27017/streamingapp
+          ports:
+            - containerPort: 3004

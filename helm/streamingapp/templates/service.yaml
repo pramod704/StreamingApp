@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-mongodb
+spec:
+  selector:
+    app: {{ .Release.Name }}-mongodb
+  ports:
+    - port: {{ .Values.mongodb.port }}
+      targetPort: {{ .Values.mongodb.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-frontend
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: {{ .Release.Name }}-frontend
+  ports:
+    - port: {{ .Values.frontend.service.port }}
+      targetPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-auth
+spec:
+  selector:
+    app: {{ .Release.Name }}-auth
+  ports:
+    - port: {{ .Values.auth.service.port }}
+      targetPort: 3001
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-streaming
+spec:
+  selector:
+    app: {{ .Release.Name }}-streaming
+  ports:
+    - port: {{ .Values.streaming.service.port }}
+      targetPort: 3002
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-admin
+spec:
+  selector:
+    app: {{ .Release.Name }}-admin
+  ports:
+    - port: {{ .Values.admin.service.port }}
+      targetPort: 3003
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-chat
+spec:
+  selector:
+    app: {{ .Release.Name }}-chat
+  ports:
+    - port: {{ .Values.chat.service.port }}
+      targetPort: 3004
